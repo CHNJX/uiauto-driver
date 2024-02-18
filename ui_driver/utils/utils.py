@@ -10,7 +10,7 @@ import time
 
 from jsonpath import jsonpath
 
-from ui_driver.utils.service_logger import Logger
+from ui_driver.utils.logger import Logger
 
 
 class Utils:

@@ -27,7 +27,7 @@ class ProjectGenerator:
             return 1
         ui_utils.create_folder(project_name)
         ui_utils.create_folder(join(project_name, 'testcase'))
-        ui_utils.create_folder(join(project_name, 'page'))
+        ui_utils.create_folder(join(project_name, 'pages'))
         ui_utils.create_folder(join(project_name, 'utils'))
         ui_utils.create_folder(join(project_name, 'resource'))
         for dir_name in listdir(project_name):
@@ -40,9 +40,14 @@ class ProjectGenerator:
     def __generate_base_need(self, project_name, project_type):
         template = Template()
         page_dir = join(project_name, 'page')
+        utils_dir = join(project_name, 'utils')
         if project_type == 'airtest':
-            ui_utils.write(template.get_content('airtest_base_page.tpl'), join(page_dir, 'base_page.py'))
+            ui_utils.write(template.get_content('airtest_base_page.tpl'), join(page_dir, 'airtest_base_page.py'))
+            ui_utils.write(template.get_content('common.tpl'), join(utils_dir, 'common.py'))
 
 
 if __name__ == '__main__':
-    pass
+    template = Template()
+    page_dir = join('demo', 'page')
+    ui_utils.write(template.get_content('ui_driver/templates/airtest_base_page.tpl'), join(page_dir,
+                                                                                           'airtest_base_page.py'))

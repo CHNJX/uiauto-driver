@@ -10,10 +10,9 @@ import time
 
 import yaml
 
-from base import global_val
-from base.base_page import BasePage
-from utils import utils
-from utils.utils import Utils
+from ui_driver import global_val
+from ui_driver.airtest_base_page import BasePage
+from ui_driver.utils import utils
 
 
 class PageGenerate(BasePage):
@@ -39,7 +38,7 @@ class PageGenerate(BasePage):
         """
         if not self.page_list.get(page_name):
             # 先获取文件路径
-            file_path = utils.Utils.search_file(os.path.join(os.path.dirname(__file__), '../pages/'),
+            file_path = utils.Utils.search_file(os.path.join('pages/'),
                                                 f'{page_name}.yaml')
             cur_page = self.load_yaml(file_path)
             for (key, value) in cur_page.items():
@@ -64,9 +63,10 @@ class PageGenerate(BasePage):
         执行具体的action步骤
         :param action: 步骤列表  type：list[dict]
         """
-        page_image_dir = os.path.join(os.path.dirname(__file__), f'../resource/{page_name}/')
+        page_image_dir = f'resource/{page_name}/'
         for step in action:
             action_mapping = {
+                'init': lambda: self.set_device_ip(run_value),
                 'click': self.click,
                 'text': lambda: setattr(self, '_result', self.get_ele_text()),
                 'save': lambda: global_val.save_list.update({run_value: self._result}),
@@ -75,7 +75,7 @@ class PageGenerate(BasePage):
                 'input': lambda: self.handle_input_action(run_value),
                 'return': lambda: self.handle_return_action(run_value),
                 'find': lambda: self.handle_find_action(run_value),
-                'if': lambda: self.handle_if_action(key,run_value,page_name)
+                'if': lambda: self.handle_if_action(key, run_value, page_name)
             }
 
             for (key, value) in step.items():
@@ -88,6 +88,8 @@ class PageGenerate(BasePage):
                 elif '.' in key:
                     self.handle_dynamic_import(key)
 
+    def set_device_ip(self, ip):
+        self.device_ip = ip
 
     def handle_if_action(self, key, run_value, page_name):
         """

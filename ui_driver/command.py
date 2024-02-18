@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# @Time     :2023/2/7 12:38
+# @Time     :2024/2/18 12:38
 # @Author   :CHNJX
 # @File     :command.py
 # @Desc     :命令工具
@@ -61,6 +61,7 @@ def run(testcase, tag, reset, threads):
 
 
 group.add_command(start_project)
+group.add_command(run)
 
 
 def cmd():

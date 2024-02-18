@@ -7,7 +7,7 @@ import os
 
 import yaml
 
-from ui_driver.utils.service_logger import Logger
+from ui_driver.utils.logger import Logger
 from ui_driver import global_val
 from ui_driver.testcase_object import Testcase
 

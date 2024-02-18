@@ -3,10 +3,10 @@
 # @Author   :CHNJX
 # @File     :testcase_object.py
 # @Desc     :测试用例的实体类
-from ui_driver.utils.service_logger import Logger
+from ui_driver.utils.logger import Logger
 from ui_driver.page_generate import PageGenerate
 from ui_driver import global_val
-from utils.utils import Utils
+from ui_driver.utils.utils import Utils
 
 
 class Testcase:

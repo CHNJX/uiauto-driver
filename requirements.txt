@@ -57,3 +57,6 @@ tornado==6.4
 urllib3==2.1.0
 websocket-client==0.48.0
 wrapt==1.16.0
+
+click~=8.1.7
+setuptools~=69.1.0

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time     :2023/2/3 7:48 上午
 # @Author   :CHNJX
-# @File     :service_logger.py
+# @File     :logger.py
 # @Desc     :日志构造器
 
 import logging

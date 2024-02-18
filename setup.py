@@ -19,7 +19,7 @@ setup(
     author='CHNJX',
     author_email='chaozhourose@gmail.com',
     url='https://github.com/CHNJX/uiauto-driver',
-    packages=['ui_driver','ui_driver.utils'],
+    packages=['ui_driver', 'ui_driver.utils'],
     package_data={'templates': ['ui_driver/templates/*']},
     include_package_data=True,
     entry_points={

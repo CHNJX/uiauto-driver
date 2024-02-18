@@ -1,7 +1,10 @@
+# @Time     :2024/2/18 12:38
+# @Author   :CHNJX
+# @File     :command.py
+# @Desc     :页面共用
 from airtest.core.api import *
 
 from ui_driver.utils.logger import Logger
-from utils.common import PAGE_DIR
 from airtest.core.api import swipe
 from airtest.core.api import device
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
@@ -14,13 +17,13 @@ from PIL import Image
 
 
 class BasePage:
+    device_ip = ''
 
-    # ip地址根据需要进行修改
-    def __init__(self, device=None, device_ip="ip:5555"):
+    def __init__(self, device=None):
         self._element = None
         self._result = None
         self.logger = self._setup_logger()
-        self.device = self._setup_device(device, device_ip)
+        self.device = self._setup_device(device, self.device_ip)
         self.poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
         self.page_dir = os.path.join(os.path.dirname(__file__), '../resources/page/')
 
@@ -37,7 +40,7 @@ class BasePage:
                 self.logger.error(f"Failed to connect to device: {device_ip}. Error: {e}")
                 raise e
         else:
-            return device
+            self.device = device
 
     def find_image(self, image_path, similarity=0.995):
         """使用图片查找元素"""
