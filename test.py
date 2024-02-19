@@ -4,4 +4,7 @@ def test_setup_testcase():
     res = setup_run('testcase/dd.yml')
     print(res)
 
-test_setup_testcase()
+
+
+
+

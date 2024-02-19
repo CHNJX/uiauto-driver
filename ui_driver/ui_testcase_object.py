@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time     :2022/7/31 3:10 下午
 # @Author   :CHNJX
-# @File     :testcase_object.py
+# @File     :ui_testcase_object.py
 # @Desc     :测试用例的实体类
 from ui_driver.utils.logger import Logger
 from ui_driver.page_generate import PageGenerate

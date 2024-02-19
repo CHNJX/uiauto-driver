@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # @Time     :2022/7/31 2:36 下午
 # @Author   :CHNJX
-# @File     :testcase_generate.py
+# @File     :ui_testcase_generate.py
 # @Desc     :动态生成用例
 import os
 
@@ -9,7 +9,7 @@ import yaml
 
 from ui_driver.utils.logger import Logger
 from ui_driver import global_val
-from ui_driver.testcase_object import Testcase
+from ui_driver.ui_testcase_object import Testcase
 
 
 class TestcaseGenerate:
