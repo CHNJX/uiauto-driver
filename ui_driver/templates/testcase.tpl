@@ -2,13 +2,13 @@ import os
 
 import pytest
 
-from uidriver.ui_driver.testcase_generate import TestcaseGenerate
+from ui_driver.generate_testcase import GenerateTestcase
 
 steps = {}
 
 
 class TestCase:
-    tg = TestcaseGenerate()
+    tg = GenerateTestcase()
     tg.load_case(os.path.dirname(__file__)+'/'+str(__name__).split('.')[-1] + '.yaml')
 
     @pytest.mark.parametrize(

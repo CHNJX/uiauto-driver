@@ -5,7 +5,6 @@
 import importlib
 import logging
 import os
-import platform
 import time
 
 import yaml
@@ -14,7 +13,6 @@ from ui_driver.utils.utils import Utils
 from ui_driver import global_val
 from ui_driver.airtest_base_page import BasePage
 from ui_driver.utils import utils
-import importlib
 
 
 class PageGenerate(BasePage):

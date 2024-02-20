@@ -46,7 +46,7 @@ def run(testcase, tag, reset, threads):
     :param reset: 是否重置allure报告
     """
     testcase = setup_run(testcase)
-    command = f'pytest -v -s {testcase}'
+    command = f'pytest -W ignore::DeprecationWarning -v -s {testcase}'
     if reset == 'true':
         if 'win' in sys.platform:
             subprocess.call(f'rmdir /Q /S allure-results', shell=True)

@@ -18,12 +18,13 @@ from PIL import Image
 
 class BasePage:
     device_ip = ''
+    _device_instance = None  # 用于存储设备连接的单例
 
-    def __init__(self, device=None):
+    def __init__(self):
         self._element = None
         self._result = None
         self.logger = self._setup_logger()
-        self.device = self._setup_device(device, self.device_ip)
+        self.device = self._setup_device(self.device_ip)
         self.poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
         self.page_dir = os.path.join(os.path.dirname(__file__), '../resources/page/')
 
@@ -32,15 +33,16 @@ class BasePage:
         logger.setLevel(logging.ERROR)
         return Logger().get_logger()
 
-    def _setup_device(self, device, device_ip):
-        if device is None:
+    @classmethod
+    def _setup_device(cls, device_ip):
+        if cls._device_instance is None or (device_ip and cls._device_instance.device_ip != device_ip):
             try:
-                return connect_device(f"Android:///{device_ip}")
+                cls._device_instance = connect_device(f"Android:///{device_ip}")
+                cls._device_instance.device_ip = device_ip  # 存储设备IP为了后续比较
             except Exception as e:
-                self.logger.error(f"Failed to connect to device: {device_ip}. Error: {e}")
+                logging.error(f"Failed to connect to device: {device_ip}. Error: {e}")
                 raise e
-        else:
-            self.device = device
+        return cls._device_instance
 
     def find_image(self, image_path, similarity=0.995):
         """使用图片查找元素"""
