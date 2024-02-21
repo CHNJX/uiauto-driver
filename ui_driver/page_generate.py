@@ -71,11 +71,14 @@ class PageGenerate(BasePage):
                 'text': lambda: setattr(self, '_result', self.get_ele_text()),
                 'save': lambda: global_val.save_list.update({run_value: self._result}),
                 'sleep': lambda: time.sleep(run_value),
+                'is_image_exist': lambda: self.is_image_exist(page_image_dir + run_value),
                 'find_image': lambda: self.find_image(page_image_dir + run_value),
                 'input': lambda: self.handle_input_action(run_value),
                 'return': lambda: self.handle_return_action(run_value),
                 'find': lambda: self.handle_find_action(run_value),
-                'if': lambda: self.handle_if_action(key, run_value, page_name)
+                'if': lambda: self.handle_if_action(key, run_value, page_name),
+                'screen': lambda: self.get_current_screen(run_value),
+                'compare': lambda: self.compare_image(page_name, *run_value)
             }
 
             for (key, value) in step.items():

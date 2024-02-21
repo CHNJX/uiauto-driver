@@ -3,6 +3,8 @@
 # @Author   :CHNJX
 # @File     :ui_testcase_object.py
 # @Desc     :测试用例的实体类
+import numpy
+
 from ui_driver.utils.logger import Logger
 from ui_driver.page_generate import PageGenerate
 from ui_driver import global_val
@@ -77,7 +79,11 @@ class Testcase:
                                 elif assert_method == 'equals':
                                     assert expect_value == run_value
                                 elif assert_method == 'true':
-                                    assert run_value and '${' not in run_value
+                                    self.logger.info(type(run_value))
+                                    if isinstance(run_value, numpy.bool_):
+                                        assert run_value
+                                    else:
+                                        assert run_value and '${' not in run_value
                             except Exception as e:
                                 self.logger.error(f'断言失败 断言方式：{assert_method} 预期值：{expect_value} 实际值：{run_value}')
                                 raise e

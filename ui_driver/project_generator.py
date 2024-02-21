@@ -41,13 +41,17 @@ class ProjectGenerator:
         template = Template()
         page_dir = join(project_name, 'page')
         utils_dir = join(project_name, 'utils')
+        project_label_content = ''
+        ui_utils.write(template.get_content('custom_methods.tpl', project_type=project_type),
+                       join(project_name, 'custom_methods.py'))
         if project_type == 'airtest':
-            ui_utils.write(template.get_content('airtest_base_page.tpl'), join(page_dir, 'airtest_base_page.py'))
             ui_utils.write(template.get_content('common.tpl'), join(utils_dir, 'common.py'))
+            project_label_content = 'airtest'
+        ui_utils.write(project_label_content, join(project_name, 'label.txt'))
 
 
 if __name__ == '__main__':
     template = Template()
     page_dir = join('demo', 'page')
-    ui_utils.write(template.get_content('ui_driver/templates/airtest_base_page.tpl'), join(page_dir,
+    ui_utils.write(template.get_content('ui_driver/templates/custom_methods.tpl'), join(page_dir,
                                                                                            'airtest_base_page.py'))

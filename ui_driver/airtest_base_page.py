@@ -21,8 +21,12 @@ class BasePage:
     _device_instance = None  # 用于存储设备连接的单例
 
     def __init__(self):
+        # 当前获取的元素
         self._element = None
+        # 当前各种结果
         self._result = None
+        # 当前的截图对象
+        self.screen = None
         self.logger = self._setup_logger()
         self.device = self._setup_device(self.device_ip)
         self.poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
@@ -48,6 +52,11 @@ class BasePage:
         """使用图片查找元素"""
         self.logger.info(f"查找图片：{image_path}")
         self._result = exists(Template(image_path, threshold=similarity))
+        return self._result
+
+    def is_image_exist(self, image_path, similarity=0.995):
+        res = self.find_image(image_path, similarity)
+        self._result = res is not None and len(res) != 0
         return self._result
 
     def click_image(self, image_path):
@@ -151,9 +160,9 @@ class BasePage:
 
         return self
 
-    def swipe_to_target(self, direction: str, *targets):
+    def swipe_to_target(self, direction: str, targets: tuple[str]):
         """
-        Swipe until all target elements are visible.
+        滑动到目标位置
         """
         self.logger.info(f'Swiping screen to find targets: {targets}')
         while not self._are_targets_found(targets):
@@ -166,6 +175,9 @@ class BasePage:
                 raise Exception('Target elements not found')
 
     def _are_targets_found(self, targets):
+        """
+        查看是否存在目标元素
+        """
         return any(self.find_image(target) for target in targets)
 
     def _swipe_screen(self, direction):
@@ -180,19 +192,24 @@ class BasePage:
         }
         swipe(*swipe_start_end[direction])
 
-    def get_current_screen(self):
+    def get_current_screen(self, image_name=None):
         # 获取当前屏幕的快照
         self.logger.info('进行截图')
         screen_pil = G.DEVICE.snapshot()  # 返回PIL格式的图像
         if screen_pil is None:
             raise ValueError("Failed to capture screen")
 
+        # 保存截图到本地
+        if image_name is not None:
+            cv2.imwrite(f'resource/screen/{image_name}.jpg', screen_pil)
+            self.logger.info(f'截图已保存到 resource/screen/{image_name}')
         # 将PIL图像转换为OpenCV格式
-        screen_cv = cv2.cvtColor(np.array(screen_pil), cv2.COLOR_RGB2BGR)
-        return screen_cv
+        self.screen = cv2.cvtColor(np.array(screen_pil), cv2.COLOR_RGB2BGR)
+
+        return self.screen
 
     def compare_screens(self, screen1, screen2, threshold=0.99):
-        """比较两张图片是否一致"""
+        """比较两张图片流是否一致"""
         # 检查图像是否为空
         if screen1 is None or screen2 is None:
             raise ValueError("One of the input images is empty")
@@ -206,6 +223,22 @@ class BasePage:
 
         # 如果SSIM值高于阈值，则认为屏幕没有显著变化
         return ssim_index >= threshold
+
+    def compare_image(self, page_name, image1: str, image2: str, threshold=0.99):
+
+        image_base_dir = 'resource/'
+        if image1.startswith('screen'):
+            image_path1 = image_base_dir + 'screen/' + image1[7:]
+        else:
+            image_path1 = image_base_dir + f'{page_name}/' + image1
+        screen1 = cv2.imread(image_path1 + '.jpg')
+        if image2.startswith('screen'):
+            image_path2 = image_base_dir + 'screen/' + image2[7:]
+        else:
+            image_path2 = image_base_dir + f'{page_name}/' + image2
+        screen2 = cv2.imread(image_path2 + '.jpg')
+        self._result = self.compare_screens(screen1, screen2, threshold)
+        return self._result
 
     def back(self):
         keyevent('BACK')
