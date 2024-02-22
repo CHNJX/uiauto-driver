@@ -91,7 +91,9 @@ class BasePage:
         return self
 
     def input(self, input_text: str):
-        self._element.set_text(input_text)
+        # if self._element:
+        #     self._element.set_text(input_text)
+        text(input_text)
         return self
 
     def find_and_input(self, locator: str, input_text: str):

@@ -11,13 +11,36 @@ import yaml
 from ui_driver.utils.utils import Utils
 
 from ui_driver import global_val
-from ui_driver.airtest_base_page import BasePage
 from ui_driver.utils import utils
+
+
+# 动态加载BasePage
+def load_base_page():
+    with open('label.txt', 'r') as label:
+        content = label.read().strip()
+        if content in ['airtest', 'appium']:
+            module_path = f"ui_driver.{content}_base_page"
+            module = importlib.import_module(module_path)
+            return getattr(module, 'BasePage')
+        else:
+            raise ImportError(f"Unsupported framework '{content}' in label.txt")
+
+
+BasePage = load_base_page()
+
+
+class PageGenerateSingleton:
+    _instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = PageGenerate()
+        return cls._instance
 
 
 class PageGenerate(BasePage):
     page_list = {}
-    res = None
     yaml_cache = {}
 
     def load_yaml(self, filepath):
@@ -54,7 +77,7 @@ class PageGenerate(BasePage):
         # 先对页面进行转换
         actions = self.generate_page(page_name)
         if not actions.get(action_name):
-            logging.error('当前页面不存在' + action_name + '方法')
+            self.logger.error('当前页面不存在' + action_name + '方法')
             return
         self.run(page_name, actions[action_name])
 
@@ -67,6 +90,7 @@ class PageGenerate(BasePage):
         for step in action:
             action_mapping = {
                 'init': lambda: self.set_device_ip(run_value),
+                'click_image': lambda: self.click_image(page_image_dir + run_value),
                 'click': self.click,
                 'text': lambda: setattr(self, '_result', self.get_ele_text()),
                 'save': lambda: global_val.save_list.update({run_value: self._result}),
@@ -146,7 +170,6 @@ class PageGenerate(BasePage):
                 # 如果需要传递参数，可以在这里处理参数的传递
                 if isinstance(run_value, list) and len(run_value) != 0:
                     run_value = tuple(run_value)
-                    self.logger.info(run_value)
                     result = method(instance, *run_value)
                 else:
                     result = method()
