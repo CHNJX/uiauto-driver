@@ -56,7 +56,6 @@ class Testcase:
         执行测试步骤
         :param steps: 步骤
         """
-        self.logger.info(f'ssssssssssssssss{steps}')
         for action, value in steps.items():
             try:
                 if action == 'print':
@@ -169,7 +168,6 @@ class Testcase:
         :return:
         """
         if self.setup_class:
-            self.logger.info(f'ssssssssssssssss{self.setup_class}')
             for setup_class_step in self.setup_class:
                 self.run_step(setup_class_step)
 
